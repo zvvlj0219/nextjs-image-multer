@@ -1,0 +1,119 @@
+.heading {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.select_image_button {
+    display: block;
+    padding: 10px 20px;
+    font-size: 15px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.select_image_label {
+    display: block;
+    width: 100px;
+    padding: 10px 20px;
+    font-size: 15px;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: limegreen;
+    border-radius: 5px;
+}
+
+.image {
+    width: 300px;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+}
+
+.preview_button_container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.flex_container_row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.flex_container_column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.justify_content_center {
+    justify-content: center;
+}
+
+.justify_content_flexEnd {
+    justify-content: flex-end;
+}
+
+.justify_content_flexStart {
+    justify-content: flex-start;
+}
+
+.image_wrapper {
+    border: 1px solid lightgrey;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.upload_button {
+    display: block;
+    padding: 10px;
+    cursor: pointer;
+    background-color: lightblue;
+    border: none;
+    border-radius: 3px;
+    width: 100px;
+    margin-right: 20px;
+}
+
+.cancel_button {
+    display: block;
+    padding: 10px;
+    background-color: lightcoral;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 70px;
+}
+
+.cancel_all_button {
+    display: block;
+    padding: 10px;
+    margin-right: 20px;
+    background-color: lightcoral;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 100px;
+}
+
+.delete_button {
+    display: block;
+    margin-left: auto;
+    padding: 7px 10px;
+    cursor: pointer;
+}
+
+.display_none {
+    display: none;
+}
+
+.cancel_button:hover,
+.delete_button:hover,
+.select_image_button:hover,
+.upload_button:hover {
+    opacity: 0.8;
+}
