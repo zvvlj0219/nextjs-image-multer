@@ -64,14 +64,12 @@ interface Post {
 const uri = baseUrl
 
 type Props = {
-    bucketFile: BucketFile[],
+    _posts: Post[]
 }
 
-const Image = ({ bucketFile }: Props) => {
-    const refFirstRef = useRef(true);
-
+const Image = ({ _posts }: Props) => {
     const fileInputElement = useRef<HTMLInputElement>(null)
-    const [posts, setPosts] = useState<Post[]>([])
+    const [posts, setPosts] = useState<Post[]>(_posts)
     const [selectedfiles, setSelectedFiles] = useState<Image[] | null>(null)
     const [previewSrc, setPreviewSrc] = useState<Preview[]>([])
     const [isPreviewActive, setIsPreviewActive] = useState<boolean>(false)
@@ -97,15 +95,12 @@ const Image = ({ bucketFile }: Props) => {
 
         // call preview
         for (let i = 0; i < FileObject.length; i+= 1) {
-            // previewSelectedImage(FileArray[i])
             previewSelectedImage(FileArray[i])
         }
     }
 
     const previewSelectedImage = (img: Image) => {
         if (!img && !isPreviewActive) return
-
-        console.log(img)
 
         const reader = new FileReader()
     
@@ -166,7 +161,6 @@ const Image = ({ bucketFile }: Props) => {
             if(files) {
                 setIsPreviewActive(false)
                 // refetch
-                console.log(...files)
                 files.forEach((file: UploadFile) => {
                     fetchImageBinaryDataFromGridfs(file)
                 })
@@ -177,7 +171,6 @@ const Image = ({ bucketFile }: Props) => {
     }
 
     const deleteImageFromGridFs = async (id: ObjectId) => {
-        console.log(id)
         const res = await fetch(`${uri}/images/delete/${id}`,{
             method: 'DELETE'
         })
@@ -216,26 +209,6 @@ const Image = ({ bucketFile }: Props) => {
         }
         
     }
-
-    useEffect(() => {
-        // ignore strictmode
-        if (process.env.NODE_ENV === "development") {
-            if (refFirstRef.current) {
-              refFirstRef.current = false;
-              return;
-            }
-        }
-
-        const start = () => {
-            if(bucketFile){
-                bucketFile.forEach((file: BucketFile) => {
-                    fetchImageBinaryDataFromGridfs(file)
-                })
-            }
-        }
-
-        start()
-    }, [bucketFile])
     
     return (
         <Layout>
@@ -349,7 +322,7 @@ const Image = ({ bucketFile }: Props) => {
     );
 }
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
     await db.connect()
 
     const fetchImagesFileFromGridFs = async () => {
@@ -360,11 +333,32 @@ export const getServerSideProps = async () => {
 
     const bucketFile = await fetchImagesFileFromGridFs()
 
+    const fetchImageBinaryDataFromGridfs = async (file: BucketFile) => {
+        const res = await fetch(`${uri}/images/fetch/${file.filename}`)
+
+        return {
+            id: file._id,
+            url: res.url
+        }
+    }
+
+    const mapResult = bucketFile.map(async (file: BucketFile) => {
+        return fetchImageBinaryDataFromGridfs(file)
+    })
+
+    const getPosts = async () => {
+        const posts = await Promise.all(mapResult)
+        return posts as Post[]
+    }
+
+    const _posts = await getPosts()
+    
     await db.disconnect()
 
     return {
         props: {
             bucketFile,
+            _posts
         }
     }
 }
